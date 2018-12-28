@@ -1,2 +1,6 @@
-model_checkpoint_path: "i0_l256_ckpt"
-all_model_checkpoint_paths: "i0_l256_ckpt"
+model_checkpoint_path: "i29800_l256_ckpt"
+all_model_checkpoint_paths: "i29000_l256_ckpt"
+all_model_checkpoint_paths: "i29200_l256_ckpt"
+all_model_checkpoint_paths: "i29400_l256_ckpt"
+all_model_checkpoint_paths: "i29600_l256_ckpt"
+all_model_checkpoint_paths: "i29800_l256_ckpt"

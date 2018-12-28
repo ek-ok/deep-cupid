@@ -4,7 +4,7 @@ import numpy as np
 
 class CharRNN():
     def __init__(self, char_to_ind, batch_shape, rnn_size, num_layers,
-                 learning_rate, grad_clip):
+                 learning_rate, grad_clip, predict=False):
         self.char_to_ind = char_to_ind
         self.num_classes = len(char_to_ind)
         self.num_samples, self.num_chars = batch_shape
@@ -12,6 +12,10 @@ class CharRNN():
         self.num_layers = num_layers
         self.learning_rate = learning_rate
         self.grad_clip = grad_clip
+
+        if predict:
+            self.num_samples, self.num_chars = (1, 1)
+            self.checkpoint = tf.train.latest_checkpoint('checkpoints')
 
         self.build_network()
 
@@ -109,27 +113,23 @@ class CharRNN():
         return c
 
     def predict(self, prime, num_char):
-        self.num_samples, self.num_chars = (1, 1)
-        self.build_network()
-
         ind_to_char = {v: k for k, v in self.char_to_ind.items()}
 
         input_chars = [self.char_to_ind[s] for s in list(prime)]
         output_chars = []
-
-        checkpoint = tf.train.latest_checkpoint('checkpoints')
+        output_char = input_chars[-1]
 
         with tf.Session() as sess:
-            self.saver.restore(sess, checkpoint)
+            self.saver.restore(sess, self.checkpoint)
             state = sess.run(self.initial_state)
+            # Loop for inputs
             for input_char in input_chars:
                 feed = {self.inputs: [[input_char]],
                         self.initial_state: state,
                         self.keep_prob: 1.}
                 state = sess.run(self.final_state, feed_dict=feed)
 
-            output_char = input_chars[-1]
-
+            # Loop for prediction
             for _ in range(num_char):
                 feed = {self.inputs: [[output_char]],
                         self.initial_state: state,
