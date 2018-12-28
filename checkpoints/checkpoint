@@ -1,0 +1,2 @@
+model_checkpoint_path: "i2000_l256_LSTM_ckpt"
+all_model_checkpoint_paths: "i2000_l256_LSTM_ckpt"
